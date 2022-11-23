@@ -22,7 +22,7 @@ class AdminController extends AbstractController
     {
 
         return $this->render(
-            'admin/index.html.twig.twig'
+            'admin/index.html.twig'
         );
     }
 

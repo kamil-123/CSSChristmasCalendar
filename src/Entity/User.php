@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="Účet s tímto emailem již existuje.")
  */
-class User implements UserInterface, AccountInterface
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -48,67 +45,6 @@ class User implements UserInterface, AccountInterface
      * @ORM\Column(type="string", length=255, name="last_name", nullable=true)
      */
     private $lastName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $city;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_news", nullable=true)
-     */
-    private $isNews;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $frequency;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_gdpr", nullable=true)
-     */
-    private $isGdpr;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true, name="created_at")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true, name="updated_at")
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $lastSendAt;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $changePassword;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $active;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $tokenCreatedAt;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $token;
-
-    public function __construct()
-    {
-        $this->createdAt = new DateTime();
-        $this->changePassword = false;
-    }
 
     public function getId(): int
     {
@@ -208,148 +144,5 @@ class User implements UserInterface, AccountInterface
         $this->lastName = $lastName;
 
         return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city = null): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getIsNews(): ?bool
-    {
-        return $this->isNews;
-    }
-
-    public function setIsNews(?bool $isNews = null): self
-    {
-        $this->isNews = $isNews;
-
-        return $this;
-    }
-
-    public function getFrequency(): ?string
-    {
-        return $this->frequency;
-    }
-
-    public function setFrequency(?string $frequency = null): self
-    {
-        $this->frequency = $frequency;
-
-        return $this;
-    }
-
-    public function getIsGdpr(): ?bool
-    {
-        return $this->isGdpr;
-    }
-
-    public function setIsGdpr(?bool $isGdpr = null): self
-    {
-        $this->isGdpr = $isGdpr;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getLastSendAt(): ?\DateTimeInterface
-    {
-        return $this->lastSendAt;
-    }
-
-    public function setLastSendAt(?\DateTimeInterface $lastSendAt): self
-    {
-        $this->lastSendAt = $lastSendAt;
-
-        return $this;
-    }
-
-    public function isChangePassword(): bool
-    {
-        return $this->changePassword;
-    }
-
-    public function setChangePassword(bool $changePassword): void
-    {
-        $this->changePassword = $changePassword;
-    }
-
-    public function isActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    public function getTokenCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->tokenCreatedAt;
-    }
-
-    public function setTokenCreatedAt(?\DateTimeInterface $tokenCreatedAt): self
-    {
-        $this->tokenCreatedAt = $tokenCreatedAt;
-
-        return $this;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(?string $token): void
-    {
-        $this->token = $token;
-        $this->tokenCreatedAt = Datetime::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"));
-    }
-
-    public function isTokenValid(): bool
-    {
-        if ($this->token === null || $this->tokenCreatedAt === null ) {
-            return false;
-        }
-        return true;
-    }
-
-    public function resetToken(): void
-    {
-        $this->token = null;
-        $this->tokenCreatedAt = null;
     }
 }
