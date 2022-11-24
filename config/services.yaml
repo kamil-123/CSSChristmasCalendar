@@ -44,5 +44,5 @@ services:
     #    arguments:
     #        $frontendUrl: '%env(FE_URL)%'
 
-    #liip_imagine.meta_data.reader:
-    #    class: App\Service\CustomImagineExifMetadataReader
+    liip_imagine.meta_data.reader:
+        class: App\Service\CustomImagineExifMetadataReader

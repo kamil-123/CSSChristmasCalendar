@@ -1,0 +1,31 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Adventni kalendar {% if form.vars.data.id != null %}Upravit{% else %}Přídat{% endif %} osobu{% endblock %}
+
+{% block body %}
+    <div class="col-10 offset-2" id="main">
+        <h1>{% if form.vars.data.id != null %}Upravit{% else %}Přídat{% endif %} osobu</h1>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.giftName) }}
+        {{ form_row(form.file) }}
+        {{ form_row(form.save) }}
+        <a href="{{ path('admin.person.index') }}" class="btn btn-lg btn-secondary btn-block">Zpět</a>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('.dropdown-toggle').dropdown();
+        $('.custom-file-input').on('change', function(event) {
+            var inputFile = event.currentTarget;
+            $(inputFile).parent()
+                .find('.custom-file-label')
+                .html(inputFile.files[0].name);
+        });
+    </script>
+{% endblock %}

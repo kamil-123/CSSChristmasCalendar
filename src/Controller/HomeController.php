@@ -7,6 +7,8 @@ use App\Entity\Blog;
 use App\Entity\Category;
 use App\Entity\Faq;
 use App\Entity\Lecture;
+use App\Entity\Person;
+use App\Entity\PersonGift;
 use App\Entity\Tag;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +21,11 @@ use Knp\Component\Pager\PaginatorInterface;
 class HomeController extends AbstractController
 {
    
+    private const DEFAULT_DAY = [
+        'enabled' => false,
+
+    ];
+
     private function ceskyMesic($mesic): string
     {
         static $nazvy = array(1 => 'leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec');
@@ -39,9 +46,36 @@ class HomeController extends AbstractController
      */
     public function actionIndex(Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {   
+        $personGifts = $entityManager->getRepository(PersonGift::class)->findAll();
+
+        $person = $entityManager->getRepository(Person::class)->findBy([
+            'active' => true
+        ]);
+
+        if (count($person) < 24) {
+            $giftCount = 24;
+        } else {
+            $giftCount = count($person);
+        }
+
+        $gifts = [];
+        for ($i = 1; $i <= $giftCount; $i++) {
+            $gifts[$i] = self::DEFAULT_DAY;
+        }
+
+        /** @var PersonGift $personGift */
+        foreach ($personGifts as $personGift) {
+            $gifts[$personGift->getDay()] = [
+                'enabled' => true,
+                'person' => $personGift->getPerson()->getFirstName() .' '. $personGift->getPerson()->getLastName(),
+                'giftImage' => $personGift->getGift()->getImagePath(),
+                'giftName' => $personGift->getGift()->getGiftName(),
+            ];
+        }
 
         return $this->render('home/index.html.twig', [
-                ]);
+            'gifts' => $gifts,
+        ]);
     }
 
     /**

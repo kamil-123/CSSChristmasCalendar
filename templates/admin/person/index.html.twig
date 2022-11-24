@@ -1,0 +1,55 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Adventni kalendar - Seznam osob{% endblock %}
+
+{% block body %}
+    <div class="col-10 offset-2" id="main">
+        {% for flashMessage in app.session.flashbag.get('admin.person') %}
+            <div class="alert alert-success my-success-alert">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <i class="fas fa-check"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        <h1>Osoby</h1>
+        <p>
+            <a href="{{ path('admin.person.create') }}" class="btn btn-outline-success">Přidat osobu&nbsp;<i class="fas fa-plus-circle"></i></a>
+        </p>
+        {% if persons == null %}
+            <div class="callout callout-danger">
+                <h5>Nebyl nalezena žádný osoba</h5>
+            </div>
+        {% else %}
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Jmeno</th>
+                            <th>Prijmeni</th>
+                            <th>Darek</th>
+                            <th>Obrazek</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            <tr>
+                                <td>{{ person.id }}</td>
+                                <td>{{ person.firstName }}</td>
+                                <td>{{ person.lastName }}</td>
+                                <td>{{ person.giftName }}</td>
+                                <td><img src="{{ asset(person.imagePath) | imagine_filter('squared_thumbnail_small') }}" height="80px"></td>
+                                <td class="text-left">
+                                    <a href="{{ path('admin.person.edit', {'id': person.id}) }}" class="btn btn-default btn-icon btn-xs" title="Upravit"><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="{{ path('admin.person.delete', {'id': person.id, 'token': csrf_token('person-delete')}) }}" onclick="return confirm('Opravdu chcete odstranit?')" class="btn btn-default btn-icon btn-xs" title="Odstranit {{ person.firstName }}"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
