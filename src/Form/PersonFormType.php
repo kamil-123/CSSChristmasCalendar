@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class PersonFormType extends AbstractType
 {
@@ -68,6 +69,14 @@ class PersonFormType extends AbstractType
                             'maxSize' => '5M'
                         ]),
                         new NotBlank()
+                    ]
+                ])
+                ->add('phrase', TextType::class, [
+                    'label' => 'Registační fráze',
+                    'mapped' => false,
+                    'constraints' => [
+                        new NotBlank(),
+                        new Regex('/\b(usetrenoAdvent)\b/')
                     ]
                 ]);
         }

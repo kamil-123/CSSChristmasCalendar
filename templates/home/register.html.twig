@@ -44,6 +44,13 @@
                                                 {{ form_label(form.file) }}
                                             </div>
                                         </div>
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_widget(form.phrase) }}
+                                                {{ form_label(form.phrase) }}
+                                            </div>
+                                        </div>
                                         <div class="d-flex justify-content-between mx-4 mb-3 mb-lg-4">
                                             {{ form_row(form.save) }}
                                             <div> <a href="{{ path('home') }}" class="btn btn-primary">Zpět</a></div>
