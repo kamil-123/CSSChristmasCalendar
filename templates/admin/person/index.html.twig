@@ -28,6 +28,7 @@
                             <th>Jmeno</th>
                             <th>Prijmeni</th>
                             <th>Darek</th>
+                            <th>Aktiv</th>
                             <th>Obrazek</th>
                             <th>Akce</th>
                         </tr>
@@ -39,6 +40,7 @@
                                 <td>{{ person.firstName }}</td>
                                 <td>{{ person.lastName }}</td>
                                 <td>{{ person.giftName }}</td>
+                                <td>{{ person.active == true ? 'Ano' : 'Ne' }}</td>
                                 <td><img src="{{ asset(person.imagePath) | imagine_filter('squared_thumbnail_small') }}" height="80px"></td>
                                 <td class="text-left">
                                     <a href="{{ path('admin.person.edit', {'id': person.id}) }}" class="btn btn-default btn-icon btn-xs" title="Upravit"><i class="fas fa-pencil-alt"></i></a>

@@ -1,7 +1,6 @@
 {% extends 'home.html.twig' %}
 
 {% block body %}
-
   <div class="calendar-grid">
     <div class="title">
       <h1><span class="title-1">Ušetřeno IT</span><span class="title-2">Adventní</span><span class="title-3">Kalendář</span></h1>
@@ -23,4 +22,9 @@
       </div>
     {% endfor %}
   </div>
+
+    <div class="d-flex justify-content-center">
+      <div> <a href="{{ path('gift-register') }}" class="btn btn-primary">Registrace</a></div>
+    </div>
+
 {% endblock %}

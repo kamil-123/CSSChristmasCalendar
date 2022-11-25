@@ -42,7 +42,7 @@ class PersonController extends AbstractController
     public function createAction(Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager): Response
     {
         $person = new Person();
-        $form = $this->createForm(PersonFormType::class, $person);
+        $form = $this->createForm(PersonFormType::class, $person, ['isAdmin' => true]);
 
         $form->handleRequest($request);
 
@@ -72,7 +72,7 @@ class PersonController extends AbstractController
      */
     public function editAction(Person $person, Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PersonFormType::class, $person);
+        $form = $this->createForm(PersonFormType::class, $person, ['isAdmin' => true]);
 
         $form->handleRequest($request);
 
