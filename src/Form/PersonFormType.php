@@ -56,10 +56,12 @@ class PersonFormType extends AbstractType
                     ]
                 ])
                 ->add('active', CheckboxType::class, [
-                    'label' => 'Aktivace'
+                    'label' => 'Aktivace',
+                    'required' => false,
                 ])
                 ->add('christmasDay', CheckboxType::class, [
-                    'label' => 'Vánoční překvapení'
+                    'label' => 'Vánoční překvapení',
+                    'required' => false
                 ])
             ;
         } else {
