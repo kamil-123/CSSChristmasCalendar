@@ -2,19 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\About;
-use App\Entity\Blog;
-use App\Entity\Category;
-use App\Entity\Faq;
-use App\Entity\Lecture;
 use App\Entity\Person;
 use App\Entity\PersonGift;
-use App\Entity\Tag;
 use App\Form\PersonFormType;
 use App\Repository\PersonGiftRepository;
 use App\Repository\PersonRepository;
 use App\Service\UploaderHelper;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -22,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
 
 class HomeController extends AbstractController
 {
@@ -136,14 +128,13 @@ class HomeController extends AbstractController
         PersonGiftRepository $personGiftRepository,
         PersonRepository $personRepository,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $checkToken = $this->getParameter('check.token');
         if ($checkToken !== $token) {
             return new Response(null , Response::HTTP_OK, []);
         }
 
-        $date = new DateTimeImmutable('+5days');
+        $date = new DateTimeImmutable();
         $month = (int) $date->format('m');
         $day = (int) $date->format('d');
 
@@ -164,24 +155,37 @@ class HomeController extends AbstractController
                     'active' => true,
                 ]);
 
-                $unUsedPersons = array_filter($persons, function (Person $person) use ($usedPersonIds) {
-                    return !in_array($person->getId(), $usedPersonIds);
+                $personChristmasDayArray = array_filter($persons, function (Person $person) {
+                    return $person->isChristmasDay() === true;
                 });
 
-                $unUsedGifts = array_filter($persons, function (Person $person) use($usedGiftIds) {
-                    return !in_array($person->getId(), $usedGiftIds);
-                });
+                $isChristmasDayActive = $personChristmasDayArray !== [];
 
-                if ($unUsedPersons === [] || $unUsedGifts === []) {
-                    return new Response(null , Response::HTTP_OK, []);
+                if ($day === 24 && $isChristmasDayActive === true) {
+                    $newPerson = reset($personChristmasDayArray);
+                    $newGift = $newPerson;
+                } else {
+                    $unUsedPersons = array_filter($persons, function (Person $person) use ($usedPersonIds) {
+                        return !in_array($person->getId(), $usedPersonIds) && $person->isChristmasDay() === false;
+                    });
+
+                    if ($unUsedPersons === []) {
+                        return new Response(null , Response::HTTP_OK, []);
+                    }
+
+                    shuffle($unUsedPersons);
+                    $newPerson = reset($unUsedPersons);
+                    $usedGiftIds[] = $newPerson->getId();
+
+                    $unUsedGifts = array_filter($persons, function (Person $person) use($usedGiftIds) {
+                        return !in_array($person->getId(), $usedGiftIds) && $person->isChristmasDay() === false;
+                    });
+
+
+                    shuffle($unUsedGifts);
+                    $newGift = reset($unUsedGifts);
                 }
-
-                shuffle($unUsedPersons);
-                shuffle($unUsedGifts);
-                $person = reset($unUsedPersons);
-                $gift = reset($unUsedGifts);
-                $newPersonGift = new PersonGift($day, $person, $gift);
-
+                $newPersonGift = new PersonGift($day, $newPerson, $newGift);
                 $entityManager->persist($newPersonGift);
                 $entityManager->flush();
             }

@@ -57,7 +57,11 @@ class PersonFormType extends AbstractType
                 ])
                 ->add('active', CheckboxType::class, [
                     'label' => 'Aktivace'
-                ]);
+                ])
+                ->add('christmasDay', CheckboxType::class, [
+                    'label' => 'Vánoční překvapení'
+                ])
+            ;
         } else {
             $builder
                 ->add('file', FileType::class, [
